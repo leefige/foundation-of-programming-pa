@@ -1,44 +1,46 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
 #include <memory.h>
 using namespace std;
 
-#define MAX 100000000
 #define DIGIT_NUM 9
-
-char* prims;
+#define BOUND 3163
 
 vector<int> mirrors;
 
-bool isPrim(int p) {
-    if (prims[p] == -1) {   // haven't been checked yet
-        prims[p] = 1;
-        int stop = sqrt(p) + 1;
-        for (int i = 2; i < stop; i++) {
-            if (p % i == 0) {
-                prims[p] = 0;
-                break;
-            }
-        }
-    }
-    return prims[p];
+vector<int> prims;
+
+void genPrim() {
+    bool notPrim[BOUND];
+    memset(notPrim, 0, BOUND * sizeof(bool));
+    int ed = sqrt(BOUND);
+    for (int i = 2; i <= ed; i++)
+        if (!notPrim[i])
+            for (int j = i * i; j <= BOUND; j += i)
+                notPrim[j] = 1;
+    for (int i = 2; i <= BOUND; i++)
+        if (!notPrim[i])
+            prims.push_back(i);
 }
 
-bool isMirror(int m) {
-    int tmp[9];
-    int ptr = 0;
-    while (m > 0) {
-        int mod = m % 10;
-        m /= 10;
-        tmp[ptr++] = mod;
-    }
-    for (int i = 0; i < ptr/2; i++) {
-        if (tmp[i] != tmp[ptr - i - 1]) {
-            return false;
+bool isPrim(int p) {
+    if (p < prims.at(prims.size() - 1)) {
+        if (find(prims.begin(), prims.end(), p) == prims.end()) {
+            return 0;
+        }
+        else {
+            return 1;
         }
     }
-    return true;
+    // haven't been checked yet
+    for (int i = 0; i < prims.size(); i++) {
+        if (p % prims[i] == 0) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 int tens(int n) {
@@ -49,46 +51,72 @@ int tens(int n) {
 }
 
 void genMirrow(int st, int ed) {
-    // set up
-    int digits[DIGIT_NUM] = {0};
-    digits[0] = 1;
-    int tmp = st;
-    int cnt = 0;
-    while (tmp > 0) {
-        digits[cnt++] = tmp % 10;
-        tmp /= 10;
+    if (5 >= st) {
+        mirrors.push_back(5);
     }
-    cnt--;
 
-    // generate
-    int next = 0;
-    while (next <= ed) {
-        // for each cnt of digits
-        for ( ; cnt <= DIGIT_NUM; cnt++) {
-            // for each digit
-            for (int i = 0; i <= (cnt - 1) / 2; i++) {
-                int sum = 0;
-                for (int cur = digits[i]; cur <= 9; cur++) {
-                    sum += cur * (tens(i) + tens(cnt - i - 1));
+    if (7 >= st) {
+        mirrors.push_back(7);
+    }
+
+    if (11 >= st) {
+        mirrors.push_back(11);
+    }
+
+    // 3 digits
+    for (int i = 1; i <= 9; i ++) {
+        for (int j = 0; j <= 9; j++) {
+            int sum = 101 * i + 10 * j;
+            if (sum > ed) {
+                return;
+            }
+            if (sum >= st && isPrim(sum)) {
+                mirrors.push_back(sum);
+            }
+        }
+    }
+    // 5 digits
+    for (int i = 1; i <= 9; i ++) {
+        for (int j = 0; j <= 9; j++) {
+            for (int k = 0; k <= 9; k++) {
+                int sum = 10001 * i + 1010 * j + 100 * k;
+                if (sum > ed) {
+                    return;
+                }
+                if (sum >= st && isPrim(sum)) {
+                    mirrors.push_back(sum);
                 }
             }
-            memset(digits, 0, DIGIT_NUM * sizeof(int));
-            digits[0] = 1;
         }
     }
 
+    // 7 digits
+    for (int i = 1; i <= 9; i ++) {
+        for (int j = 0; j <= 9; j++) {
+            for (int k = 0; k <= 9; k++) {
+                for (int h = 0; h <= 9; h++) {
+                    int sum = 1000001 * i + 100010 * j + 10100 * k + 1000 * h;
+                    if (sum > ed) {
+                        return;
+                    }
+                    if (sum >= st && isPrim(sum)) {
+                        mirrors.push_back(sum);
+                    }
+                }
+            }
+        }
+    }
 }
 
 int main() {
-    prims = new char[MAX];
-    memset(prims, -1, MAX*sizeof(char));
     int st, ed;
     cin >> st >> ed;
-    for (int i = st; i <= ed; i++) {
-        if (isPrim(i) && isMirror(i)) {
-            cout << i << endl;
-        }
+    genPrim();
+
+    genMirrow(st, ed);
+    int size = mirrors.size();
+    for (int i = 0; i < size; i++) {
+        cout << mirrors[i] << endl;
     }
-    delete[] prims;
     return 0;
 }
