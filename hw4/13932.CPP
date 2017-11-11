@@ -1,36 +1,110 @@
 #include <iostream>
 using namespace std;
 
-long long getPos(long long** arr, int x, int y) {
-    long long* row = arr[x];
-    return row[y];
+class Mat {
+
+    long long** mat;
+    int n;
+
+public:
+     Mat(int n) {
+        this->n = n;
+        mat = new long long*[n * n];
+    }
+
+    Mat(long long arr[], int n) {
+        this->n = n;
+        mat = new long long*[n * n];
+        for (int i = 0; i < n * n; i++) {
+            mat[i] = &arr[i];
+        }
+    }
+
+    ~Mat() {
+        if (mat) {
+            delete[] mat;
+        }
+    }
+
+    int getSize() const {
+        return n;
+    }
+
+    long long* get(int x, int y) const {
+        return mat[n * x + y];
+    }
+
+    long long getNum(int x, int y) const {
+        return *(mat[n * x + y]);
+    }
+
+    void set(int x, int y, long long* ptr) {
+        mat[n * x + y] = ptr;
+    }
+
+    void genSub(const Mat& last, int x, int y) {
+        int lastSize = last.getSize();
+        int row = 0, col = 0;
+        for (int i = 0; i < lastSize; i++) {
+            if (i == x) {
+                continue;
+            }
+            for (int j = 0; j < lastSize; j++) {
+                if (j == y) {
+                    continue;
+                }
+                set(row, col, last.get(i, j));
+                col++;
+            }
+            row++;
+            col = 0;
+        }
+    }
+
+    void printMat() const {
+        for (int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                cout << getNum(i, j) << " ";
+            }
+            cout <<endl;
+        }
+    }
+};
+
+long long powMinus(int n) {
+    long long m = -1;
+    for (int i = 0; i < n; i++) {
+        m *= -1;
+    }
+    return m;
 }
 
-long long calc(long long** arr, int n) {
+long long calc(const Mat& mat) {
+    int n = mat.getSize();
     if (n == 1) {
-        cout << **arr << endl;
-        return **arr;
+        return mat.getNum(0, 0);
     }
-    long long step = 0;
+    if (n == 2) {
+        return mat.getNum(0, 0) * mat.getNum(1, 1) - mat.getNum(0, 1) * mat.getNum(1, 0);
+    }
+    long long res = 0;
     for (int i = 0; i < n; i++) {
-        long long* row = arr[1];
-        step += getPos(arr, 0, i) * calc(&(&row[i]), n);
+        Mat sub(n - 1);
+        sub.genSub(mat, 0, i);     // by row
+        res += -1 * powMinus(i) * mat.getNum(0, i) * calc(sub);
     }
-    return step;
+    return res;
 }
 
 int main() {
     int n;
     cin >> n;
-    long long** arr = new long long*[n];
-    for (int i = 0; i < n; i++) {
-        arr[i] = new long long[n];
+    long long arr[n * n];
+    for (int i = 0; i < n * n; i++) {
+        cin >> arr[i];
     }
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cin >> arr[i][j];
-        }
-    }
-    cout << calc(arr, n);
+    Mat mat(arr, n);
+    // mat.printMat();
+    cout << calc(mat);
     return 0;
 }
