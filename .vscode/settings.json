@@ -29,6 +29,12 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "*.tcc": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cwctype": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "typeinfo": "cpp"
     }
 }
