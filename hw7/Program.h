@@ -4,8 +4,6 @@
 #include <algorithm>
 using namespace std;
 
-// #define DEBUG
-
 struct Prog {
     int sth, stm, edh, edm;
     int st;

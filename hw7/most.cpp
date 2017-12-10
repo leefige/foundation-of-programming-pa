@@ -8,7 +8,7 @@ bool comp(const Prog& a, const Prog& b) {
     return a.ed < b.ed;
 }
 
-int main() {
+int main(int argc, char** argv) {
     Program prog;
     prog.sortProg(comp);
     int cnt = 0, curTime = 0;
@@ -19,7 +19,9 @@ int main() {
     for (int i = 0; i < program.size(); i++) {
         if(program[i].st >= curTime) {
             curTime = program[i].ed;
-            program[i].print();
+            if (argc > 1) {
+                program[i].print();
+            }
             cnt++;
         }
     }
