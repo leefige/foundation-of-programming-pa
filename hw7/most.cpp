@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     prog.sortProg(comp);
     int cnt = 0, curTime = 0;
 
-    const vector<Prog> program = prog.getProg();
+    const vector<Prog>& program = prog.getProg();
     printf("total cnt: %d\n", program.size());
     
     for (int i = 0; i < program.size(); i++) {
