@@ -1,63 +1,50 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 using namespace std;
 
 struct obj {
     int cnt;
-    int pre;
-    int after;
-    int delta;
-
-    obj() {}
+    double after;
+    double delta;
 
     obj (int _cnt, int _pre, bool _half) {
         cnt = _cnt;
-        pre = 2 * _pre;
-        after = _half ? _pre : 2 * _pre;
+        after = _half ? _pre : _pre * 2;
         delta = _half ? _pre : 0;
     }
 };
 
-int comp(const void* _a, const void* _b) {
-    obj* a = (obj*) _a;
-    obj* b = (obj*) _b;
-    if (a->delta != b->delta) {
-        return b->delta - a->delta;
-    } else if (a->after != b->after) {
-        return a->after - b->after;
+bool comp(const obj& a, const obj& b) {
+    if (a.delta != b.delta) {
+        return a.delta > b.delta;
+    } else if (a.after != b.after) {
+        return a.after < b.after;
     } else {
-        return a->cnt - b->cnt;
+        return a.cnt < b.cnt;
     }
-}
-
-int compInt(const void* _a, const void* _b) {
-    int* a = (int*) _a;
-    int* b = (int*) _b;
-    return *a - *b;
 }
 
 int main() {
 
-    int N;
-    int S;
+    int S, N;
     cin >> S >> N;
-    S = S * 2;
-    obj list[2000];
-    int bought[2000];
+    S *= 2;
+    vector<obj> list;
+    vector<int> bought;
     for (int i = 0; i < N; i++) {
         int pre;
-        int half;
+        bool half;
         cin >> pre >> half;
-        list[i] = obj(i + 1, pre, half == 1);
+        list.push_back(obj(i + 1, pre, half));
     }
 
-    qsort(list, N, sizeof(obj), comp);
+    sort(list.begin(), list.end(), comp);
     bool buy = false;
-    int cnt = 0;
-    for (int i = 0; i < N; i++) {
-        if (S >= list[i].after) {
-            bought[cnt++] = list[i].cnt;
-            S -= list[i].after;
+    for (vector<obj>::iterator i = list.begin(); i != list.end(); i++) {
+        if (S >= i->after) {
+            bought.push_back(i->cnt);
+            S -= i->after;
             buy = true;
         }
         if (S <= 0) {
@@ -67,9 +54,9 @@ int main() {
     if (!buy) {
         cout << 0;
     } else {
-        qsort(bought, cnt, sizeof(int), compInt);
-        for (int i = 0; i < cnt; i++) {
-            cout << bought[i] << " ";
+        sort(bought.begin(), bought.end());
+        for (vector<int>::iterator i = bought.begin(); i != bought.end(); i++) {
+            cout << *i << " ";
         }
     }
     return 0;
