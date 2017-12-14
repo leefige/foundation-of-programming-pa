@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     int cnt = 0, curTime = 0;
 
     const vector<Prog>& program = prog.getProg();
-    printf("total cnt: %d\n", program.size());
+    // printf("total cnt: %d\n", program.size());
     
     for (int i = 0; i < program.size(); i++) {
         if(program[i].st >= curTime) {
@@ -25,5 +25,5 @@ int main(int argc, char** argv) {
             cnt++;
         }
     }
-    printf("most cnt: %d\n", cnt);
+    printf("%d\n", cnt);
 }

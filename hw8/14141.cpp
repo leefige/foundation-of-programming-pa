@@ -16,7 +16,7 @@ int search(int arr[], int len, int key) {
             l = mid + 1;        // (mid, r)
         }
     }
-    return l--;
+    return l;                   // the min number which is bigger than key
 }
 
 int main() {

@@ -1,7 +1,20 @@
 #include "Program.h"
+#include <iostream>
+#include <memory.h>
 using namespace std;
 
-int maxSize = 0;
+#define MAX_NUM 800
+#define MAX_TIME 1440   // 24 * 60
+
+int size = 0;
+int len[MAX_NUM][MAX_NUM];
+int end[MAX_NUM][MAX_NUM];
+
+int record[MAX_NUM][MAX_TIME];
+
+int max(int a, int b) {
+    return a >= b ? a : b;
+}
 
 bool comp(const Prog& a, const Prog& b) {
     if (a.st == b.st) {
@@ -10,40 +23,37 @@ bool comp(const Prog& a, const Prog& b) {
     return a.st < b.st;
 }
 
+int watch(const vector<Prog>& pro, int n, int endTime) {
+    if (n < 0) {
+        return 0;
+    }
+    if (record[n][endTime] >= 0) {
+        return record[n][endTime];
+    }
+    int max = watch(pro, n - 1, endTime);
+    if (pro[n].ed <= endTime) {
+        int val = watch(pro, n - 1, pro[n].st) + pro[n].len;
+        if (val > max) {
+            max = val;
+        }
+    }
+    record[n][endTime] = max;
+    return max;
+}
+
 int main(int argc, char** argv) {
-    Program prog;
-    prog.sortProg(comp);
+    // init
+    memset(record, -1, sizeof(int) * MAX_NUM * MAX_TIME);
+
+    // pre-process
+    Program program;
+    program.sortProg(comp);
+
+    // calc
     int maxLen = 0;
-    const vector<Prog>& program = prog.getProg();
-    maxSize = program.size();
-    printf("total cnt: %d\n", program.size());
-    
-    for (int i = 0; i < program.size(); i++) {
-        int len = 0, curTime = 0;
-        for (int j = i + 1; j < program.size(); j++) {
-            int len = 0, curTime = 0;
-            if(program[i].st >= curTime) {
-                curTime = program[i].ed;
-                if (argc > 1) {
-                    program[i].print();
-                }
-                cnt++;
-            }
-        }
-        if(program[i].st >= curTime) {
-            curTime = program[i].ed;
-            if (argc > 1) {
-                program[i].print();
-            }
-            cnt++;
-        }
-    }
-    printf("most cnt: %d\n", cnt);
+    const vector<Prog>& pro = program.getProg();
+    size = pro.size();
+    cout << watch(pro, size - 1, MAX_TIME - 1) << "min\n";
+    return 0;
 }
 
-void getMaxLen(int cnt, int& curTime) {
-    if (cnt >= maxSize) {
-        return;
-    }
-
-}
