@@ -1,30 +1,27 @@
-#include <fstream>
-#include <string.h>
 #include <vector>
-#include <algorithm>
+#include <string>
 using namespace std;
-
 struct Prog {
-    int sth, stm, edh, edm;
+    // int sth, stm, edh, edm;
     int st;
     int ed;
     int len;
     int pref;
 
     Prog(int _sth, int _stm, int _edh, int _edm, int _pref) {
-        sth = _sth;
-        stm = _stm;
-        edh = _edh;
-        edm = _edm;
+        // sth = _sth;
+        // stm = _stm;
+        // edh = _edh;
+        // edm = _edm;
         st = 60 * _sth + _stm;
         ed = 60 * _edh + _edm;
         len = ed - st;
         pref = _pref;
     }
 
-    void print() const {
-        printf("%d:%d-%d:%d %d\n", sth, stm, edh, edm, pref);
-    }
+    // void print() const {
+    //     printf("%d:%d-%d:%d %d\n", sth, stm, edh, edm, pref);
+    // }
 };
 
 class Program {

@@ -13,4 +13,4 @@ happiest: Program.cpp happiest.cpp
 	g++ -o happiest Program.cpp happiest.cpp -O2
 
 clear: 
-	rm *.exe
+	rm most.exe longest.exe happiest.exe 

@@ -1,5 +1,4 @@
 #include "Program.h"
-#include <iostream>
 #include <memory.h>
 using namespace std;
 
@@ -7,14 +6,8 @@ using namespace std;
 #define MAX_TIME 1440   // 24 * 60
 
 int size = 0;
-int len[MAX_NUM][MAX_NUM];
-int end[MAX_NUM][MAX_NUM];
 
 int record[MAX_NUM][MAX_TIME];
-
-int max(int a, int b) {
-    return a >= b ? a : b;
-}
 
 bool comp(const Prog& a, const Prog& b) {
     if (a.st == b.st) {
@@ -50,10 +43,9 @@ int main(int argc, char** argv) {
     program.sortProg(comp);
 
     // calc
-    int maxLen = 0;
     const vector<Prog>& pro = program.getProg();
     size = pro.size();
-    cout << watch(pro, size - 1, MAX_TIME - 1) << "min\n";
+    printf("%dmin\n", watch(pro, size - 1, MAX_TIME - 1));
     return 0;
 }
 

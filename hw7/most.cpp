@@ -19,9 +19,6 @@ int main(int argc, char** argv) {
     for (int i = 0; i < program.size(); i++) {
         if(program[i].st >= curTime) {
             curTime = program[i].ed;
-            if (argc > 1) {
-                program[i].print();
-            }
             cnt++;
         }
     }
