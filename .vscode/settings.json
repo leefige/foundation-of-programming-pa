@@ -35,6 +35,7 @@
         "cwctype": "cpp",
         "streambuf": "cpp",
         "system_error": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "sstream": "cpp"
     }
 }
