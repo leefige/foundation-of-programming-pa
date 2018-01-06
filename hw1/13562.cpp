@@ -8,7 +8,7 @@ vector<int> prims;
 int maxPrim = 1;
 
 bool isPrim(int p) {
-    if (p < maxPrim) {
+    if (p <= maxPrim) {
         if (find(prims.begin(), prims.end(), p) == prims.end()) {
             return 0;
         }
@@ -20,11 +20,12 @@ bool isPrim(int p) {
     // haven't been checked yet
     for (int i = 2; i < p / 2 + 1; i++) {
         if (p % i == 0) {
-            maxPrim = p;
-            prims.push_back(maxPrim);
             return 0;
         }
     }
+    maxPrim = p;
+    // printf("add %d\n", maxPrim);
+    prims.push_back(maxPrim);
     return 1;
 }
 

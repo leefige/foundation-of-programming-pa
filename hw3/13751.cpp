@@ -31,9 +31,10 @@ int main() {
     int x, y;
     cin >> x >> y;
     int atRect = -1;
-    for (int i = 0; i < rects.size(); i++) {
+    for (int i = rects.size() - 1; i >= 0; i--) {
         if (rects[i].contains(x, y)) {
             atRect = i + 1;
+            break;
         }
     }
 
